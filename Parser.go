@@ -1,15 +1,13 @@
 package JsonParser
 
-
 import (
 	"bytes"
-	"errors"
 	"strings"
+	"encoding/json"
 )
 
 //Map alias map[string]string
 type Map map[string]string
-type rMap map[rune]interface{}
 
 //Maches discard from "start" to "end"
 var Maches = []Map{
@@ -17,9 +15,10 @@ var Maches = []Map{
 	Map{"start": "/*", "end": "*/"},
 }
 
-//Discard discarding comments
-//@params:content
-//@resturns: string simple json
+/**
+去除注释
+转义url
+ */
 func Discard(content string) (string, error) {
 	var (
 		buffer    bytes.Buffer
@@ -27,11 +26,7 @@ func Discard(content string) (string, error) {
 		v         rune
 		protected bool
 	)
-	content=strings.ReplaceAll(content,"http://","http:\\/\\/")
-	content=strings.ReplaceAll(content,"https://","https:\\/\\/")
-	content=strings.ReplaceAll(content,"ws://","ws:\\/\\/")
-	content=strings.ReplaceAll(content,"wss://","wss:\\/\\/")
-	content=strings.ReplaceAll(content,"tcp://","tcp:\\/\\/")
+	content=strings.ReplaceAll(content,"://",":\\/\\/")
 	runes := []rune(content)
 	flag = -1
 	for i := 0; i < len(runes); {
@@ -96,24 +91,27 @@ func match(runes *[]rune, i int, dst string) int {
 	return 0
 }
 
-//Stack rune stack
-type Stack []rune
 
-//Push stack push
-func (s Stack) Push(r rune) {
-	s = append(s, r)
-}
-
-//Pop stack pop
-func (s Stack) Pop() (rune, error) {
-	if len(s) == 0 {
-		return 0, errors.New("stack is empty")
+/*
+反序列化
+*/
+func UnMarshal(str string,v interface{}) error{
+	str,err:=Discard(str)
+	if err!=nil {
+		return  err
 	}
-	v := s[len(s)-1]
-	s = s[:len(s)-1]
-	return v, nil
+	err = json.Unmarshal([]byte(str), v)
+	return err
 }
 
+/**
+序列化
+ */
+func Marshal(v interface{}) (string,error){
+	j,err:=json.Marshal(v)
+	if err!=nil {
+		return "",err
+	}
 
-
-
+	return string(j),nil
+}
