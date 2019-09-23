@@ -10,7 +10,7 @@
  
  
  使用   
- <code>  import "https://github.com/jxfsuda/JsonParser"   
+ <code>  import "github.com/jxfsuda/JsonParser"   
    
     ret:= &TestStruct{}   
     err := JsonParser.UnMarshal(jsonStr, ret)   
