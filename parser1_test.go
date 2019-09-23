@@ -26,7 +26,6 @@ func TestParser(t *testing.T) {
 
 
 	ret:= &TestStruct{}
-
 	err := UnMarshal(jsonStr, ret)
 	t.Logf("json.key2 : %v ",ret )
 	if err!=nil{
