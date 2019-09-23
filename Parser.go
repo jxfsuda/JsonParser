@@ -2,8 +2,10 @@ package JsonParser
 
 import (
 	"bytes"
-	"strings"
 	"encoding/json"
+	"io/ioutil"
+	"os"
+	"strings"
 )
 
 //Map alias map[string]string
@@ -115,3 +117,30 @@ func Marshal(v interface{}) (string,error){
 
 	return string(j),nil
 }
+
+/**
+从文件读取json
+ */
+func UnmarshalByJsonFile(filePath string,v interface{}) error {
+	jsonFile, err := os.Open(filePath)
+	if err != nil {
+		return err
+	}
+	defer jsonFile.Close()
+	byteValue, err := ioutil.ReadAll(jsonFile)
+	if err != nil {
+		return err
+	}
+	jsonStr := string(byteValue[:])
+	err =  UnMarshal(jsonStr,v)
+	return err
+}
+
+
+
+
+
+
+
+
+

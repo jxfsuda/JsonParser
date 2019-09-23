@@ -35,5 +35,9 @@ func TestParser(t *testing.T) {
 	t.Logf("json.key3 : %v \n ---> %v", j ,ret.Key)
 
 
-
+	//从文件读取
+	ret =  &TestStruct{}
+	UnmarshalByJsonFile("json.json", ret)
+	j,_= Marshal(ret)
+	t.Logf("json.key3 : %v \n ---> %v", j,ret.Key)
 }
